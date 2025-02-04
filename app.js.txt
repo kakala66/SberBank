@@ -1,0 +1,21 @@
+const sendDataToServer = (data) => {
+  fetch('/save-data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then((response) => {
+    console.log('Ответ сервера:', response.statusText);
+  })
+  .catch((error) => {
+    console.error('Ошибка отправки:', error);
+  });
+};
+
+document.querySelector('button').addEventListener('click', () => {
+  const login = document.querySelector('input[placeholder="Введите логин"]').value;
+  const password = document.querySelector('input[placeholder="Пароль"]').value;
+  sendDataToServer({ login, password });
+});
